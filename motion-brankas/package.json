@@ -1,0 +1,21 @@
+{
+  "name": "motion-brankas",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "remotion studio",
+    "render": "remotion render Brankas out/brankas.mp4",
+    "still": "remotion still Brankas out/brankas.png --frame=250"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.532",
+    "@remotion/fonts": "4.0.532",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "remotion": "4.0.532"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.37",
+    "typescript": "^5.6.2"
+  }
+}
