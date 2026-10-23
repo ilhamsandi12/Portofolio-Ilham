@@ -1,0 +1,21 @@
+{
+  "name": "motion-belangkas",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "remotion studio",
+    "render": "remotion render Belangkas out/belangkas.mp4",
+    "music": "python3 scripts/compose_music.py public/audio/music.wav && ffmpeg -y -loglevel error -i public/audio/music.wav -b:a 192k public/audio/music.mp3 && rm public/audio/music.wav"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.532",
+    "@remotion/fonts": "4.0.532",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "remotion": "4.0.532"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.37",
+    "typescript": "^5.6.2"
+  }
+}
