@@ -26,6 +26,9 @@ export const Pop = ({ at, x, y, rotate = 0, from = 'scale', exitAt, shadow = tru
   const out = exitAt === undefined ? 0 : ramp(frame, exitAt, 8)
   if (out >= 1) return null
   const off = 1 - s
+  const t = frame - at
+  const floatY = Math.sin(t / 22 + x * 0.01) * 7
+  const floatR = Math.sin(t / 31 + y * 0.01) * 1.4
   const dx = from === 'left' ? -1100 * off : from === 'right' ? 1100 * off : 0
   const dy = from === 'bottom' ? 1300 * off : from === 'top' ? -1300 * off : 0
   const sc = from === 'scale' ? 0.3 + 0.7 * s : from === 'slam' ? 1 + 0.9 * off : 1
@@ -36,7 +39,7 @@ export const Pop = ({ at, x, y, rotate = 0, from = 'scale', exitAt, shadow = tru
         left: x,
         top: y,
         opacity: Math.min(1, s * 3) * (1 - out),
-        transform: `translate(-50%, -50%) translate(${dx}px, ${dy}px) rotate(${rotate + off * (from === 'scale' ? -14 : 6)}deg) scale(${sc * (1 - out * 0.1)})`,
+        transform: `translate(-50%, -50%) translate(${dx}px, ${dy + floatY}px) rotate(${rotate + floatR + off * (from === 'scale' ? -14 : 6)}deg) scale(${sc * (1 - out * 0.1)})`,
         filter: shadow ? 'drop-shadow(0 22px 26px rgba(0,0,0,0.45))' : undefined,
         ...style,
       }}

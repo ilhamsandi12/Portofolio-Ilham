@@ -1,4 +1,5 @@
-import { AbsoluteFill, Audio, Sequence, staticFile, useVideoConfig } from 'remotion'
+import React from 'react'
+import { AbsoluteFill, Audio, Easing, interpolate, Sequence, staticFile, useCurrentFrame, useVideoConfig } from 'remotion'
 import { Captions } from './Captions'
 import { Film } from './Film'
 import { Branch } from './scenes/Branch'
@@ -53,6 +54,23 @@ const SFX: [string, number, number][] = [
   ['whoosh2', fr(W.lepasin) - 4, 0.6],
 ]
 
+// Kamera per adegan: masuk dengan whip-zoom + blur, lalu push-in pelan dan drift, keluar dengan zoom cepat
+const Camera = ({ len, seed, children }: { len: number; seed: number; children: React.ReactNode }) => {
+  const f = useCurrentFrame()
+  const enter = interpolate(f, [0, 9], [1, 0], { extrapolateRight: 'clamp', easing: Easing.out(Easing.cubic) })
+  const exit = interpolate(f, [len - 6, len], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: Easing.in(Easing.cubic) })
+  const push = 1 + 0.06 * (f / len)
+  const scale = push * (1 + enter * 0.18 + exit * 0.22)
+  const dx = Math.sin(f / 45 + seed) * 10 + (seed % 2 ? 1 : -1) * enter * 140
+  const dy = Math.cos(f / 52 + seed) * 8
+  const rot = (seed % 2 ? -1 : 1) * (enter * 2.5 - exit * 2) + Math.sin(f / 70 + seed) * 0.35
+  return (
+    <AbsoluteFill style={{ transform: `translate(${dx}px, ${dy}px) scale(${scale}) rotate(${rot}deg)`, filter: enter + exit > 0.02 ? `blur(${(enter + exit) * 14}px)` : undefined }}>
+      {children}
+    </AbsoluteFill>
+  )
+}
+
 // Musik turun saat ada suara narator
 const speaking = (t: number) => WORDS.some((w) => t > w.start + VO_START - 0.2 && t < w.end + VO_START + 0.3)
 
@@ -60,9 +78,11 @@ export const Short = () => {
   const { fps } = useVideoConfig()
   return (
     <AbsoluteFill style={{ background: '#000' }}>
-      {SCENE_LIST.map(([key, Scene]) => (
+      {SCENE_LIST.map(([key, Scene], i) => (
         <Sequence key={key} from={SCENES[key][0]} durationInFrames={SCENES[key][1] - SCENES[key][0]}>
-          <Scene />
+          <Camera len={SCENES[key][1] - SCENES[key][0]} seed={i}>
+            <Scene />
+          </Camera>
         </Sequence>
       ))}
       <Captions y={1430} />

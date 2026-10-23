@@ -2,16 +2,17 @@ import { AbsoluteFill, interpolate, spring, useCurrentFrame, useVideoConfig } fr
 import { ramp } from '../anim'
 import { Belangkas } from '../Belangkas'
 import { Backdrop } from '../Backdrop'
+import { hasPic, Pic } from '../Pic'
 import { Hand, Line, Pop, Stamp } from '../collage'
 import { ChalkPath, ScribbleCircle, ScribbleCross } from '../scribble'
 import { C, SERIF } from '../theme'
 import { fr, SCENES, W } from '../timing'
 
 // Cabang air tawar: titik ujung, bentuk "aneh", dan rotasi
-const BRANCHES: { d: string; x: number; y: number; stretch: [number, number]; spiky?: boolean; rot: number }[] = [
-  { d: 'M540 1180 C460 1150 340 1120 230 1030', x: 220, y: 1000, stretch: [1.5, 0.6], rot: -20 },
-  { d: 'M540 960 C640 930 760 880 860 790', x: 860, y: 770, stretch: [0.7, 1.7], spiky: true, rot: 18 },
-  { d: 'M540 760 C450 730 330 680 230 580', x: 220, y: 560, stretch: [1.3, 1.3], spiky: true, rot: -12 },
+const BRANCHES: { d: string; x: number; y: number; stretch: [number, number]; spiky?: boolean; rot: number; pic?: string }[] = [
+  { d: 'M540 1180 C460 1150 340 1120 230 1030', x: 220, y: 1000, stretch: [1.5, 0.6], rot: -20, pic: 'belinurus' },
+  { d: 'M540 960 C640 930 760 880 860 790', x: 860, y: 770, stretch: [0.7, 1.7], spiky: true, rot: 18, pic: 'euproops' },
+  { d: 'M540 760 C450 730 330 680 230 580', x: 220, y: 560, stretch: [1.3, 1.3], spiky: true, rot: -12, pic: 'euproops' },
 ]
 
 export const Branch = () => {
@@ -53,7 +54,13 @@ export const Branch = () => {
           return (
             <div key={i} style={{ position: 'absolute', left: b.x, top: b.y, transform: `translate(-50%, -50%) rotate(${b.rot + wob * 8}deg) scale(${spring({ frame: frame - at, fps, config: { damping: 14 } }) * (1 - dead * 0.1)})`, filter: 'drop-shadow(0 16px 18px rgba(0,0,0,0.45))' }}>
               <div style={{ opacity: 1 - dead * 0.55 }}>
-                <Belangkas height={300} frame={frame} stretch={[k, k2]} spiky={b.spiky && frame > morph} gray={dead} />
+                {b.pic && hasPic(b.pic) ? (
+                  <div style={{ filter: `grayscale(${dead}) brightness(${1 - dead * 0.35})`, transform: `scale(${0.8 + 0.2 * ramp(frame, morph, 18)})` }}>
+                    <Pic name={b.pic} height={280} flip={i === 1} fallback={null} />
+                  </div>
+                ) : (
+                  <Belangkas height={300} frame={frame} stretch={[k, k2]} spiky={b.spiky && frame > morph} gray={dead} />
+                )}
               </div>
               <div style={{ position: 'absolute', left: -20, top: 0 }}>
                 {frame >= punah + i * 3 && <ScribbleCross size={230} p={ramp(frame, punah + i * 3, 9)} sw={14} />}
@@ -67,7 +74,7 @@ export const Branch = () => {
 
         <Pop at={2} x={540} y={420} from="scale">
           <div style={{ transform: `scale(${1 + ramp(frame, bertahan, 12) * 0.25})` }}>
-            <Belangkas height={300} frame={frame} />
+            <Pic name="belangkas_top" height={300} fallback={<Belangkas height={300} frame={frame} />} />
           </div>
         </Pop>
         <div style={{ position: 'absolute', left: 390, top: 230 }}>
@@ -90,7 +97,7 @@ export const Branch = () => {
             <ellipse cx="540" cy="1010" rx="190" ry="60" fill="none" stroke={C.ink} strokeWidth="6" strokeDasharray="18 14" />
           </svg>
           <div style={{ position: 'absolute', left: 540, top: interpolate(drop, [0, 1], [380, 960]), transform: `translate(-50%, -50%) rotateX(${drop * 58}deg)`, filter: 'drop-shadow(0 24px 22px rgba(0,0,0,0.5))' }}>
-            <Belangkas height={460} frame={frame} />
+            <Pic name="belangkas_top" height={460} fallback={<Belangkas height={460} frame={frame} />} />
           </div>
           <Pop at={L(W.pas) + 4} x={820} y={760} rotate={8} from="slam" shadow={false}>
             <Stamp size={86} color={C.cream}>pas!</Stamp>

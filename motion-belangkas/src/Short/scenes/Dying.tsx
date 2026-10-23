@@ -3,6 +3,7 @@ import { ramp, shake } from '../anim'
 import { Art, FISH, SKULL, VOLCANO } from '../Art'
 import { Belangkas } from '../Belangkas'
 import { Backdrop } from '../Backdrop'
+import { hasPic, Pic } from '../Pic'
 import { Line, Pop } from '../collage'
 import { ScribbleUnderline } from '../scribble'
 import { C, SERIF } from '../theme'
@@ -12,6 +13,14 @@ const GRID = Array.from({ length: 100 }, (_, i) => i)
 // 90 dari 100 ikan dicoret, urutannya acak tapi tetap deterministik
 const ORDER = [...GRID].sort((a, b) => random(`o${a}`) - random(`o${b}`))
 const SURVIVORS = new Set(ORDER.slice(90))
+
+// Kacamata "deal with it" yang jatuh ke kepala belangkas versi foto
+const Glasses = ({ p }: { p: number }) =>
+  p <= 0 ? null : (
+    <svg viewBox="0 0 244 70" width={300} style={{ position: 'absolute', left: '50%', top: '20%', transform: `translate(-50%, ${(1 - p) * -600}px)`, opacity: Math.min(1, p * 4) }}>
+      <path d="M2 2 L242 2 L242 14 L220 14 C218 58 170 66 156 38 L144 18 L100 18 L88 38 C74 66 26 58 24 14 L2 14 Z" fill="#0d0b0c" stroke="#efe6d2" strokeWidth="6" strokeLinejoin="round" />
+    </svg>
+  )
 
 export const Dying = () => {
   const frame = useCurrentFrame()
@@ -53,13 +62,13 @@ export const Dying = () => {
       <Line text="The" at={great - 2} y={330} size={90} italic weight={500} exitAt={grid - 6} />
       <Line text="GREAT DYING" at={great} y={460} size={150} weight={900} exitAt={grid - 6} tracking={2} />
       <Pop at={great + 4} x={540} y={900} from="slam" exitAt={grid - 6}>
-        <Art parts={SKULL} size={520} />
+        <Pic name="skull" height={540} fallback={<Art parts={SKULL} size={520} />} />
       </Pop>
       <Pop at={great + 8} x={170} y={1200} rotate={-6} from="bottom" exitAt={grid - 6}>
-        <Art parts={VOLCANO} size={340} />
+        <Pic name="volcano" height={360} fallback={<Art parts={VOLCANO} size={340} />} />
       </Pop>
       <Pop at={great + 12} x={910} y={1220} rotate={5} from="bottom" exitAt={grid - 6}>
-        <Art parts={VOLCANO} size={300} />
+        <Pic name="volcano" height={320} flip fallback={<Art parts={VOLCANO} size={300} />} />
       </Pop>
 
       {/* 90% spesies laut */}
@@ -98,7 +107,8 @@ export const Dying = () => {
             filter: 'drop-shadow(0 26px 26px rgba(0,0,0,0.5))',
           }}
         >
-          <Belangkas height={640} frame={frame} walking glasses={ramp(frame, L(W.tetap) - 2, 8)} />
+          <Pic name="belangkas_top" height={660} fallback={<Belangkas height={640} frame={frame} walking glasses={ramp(frame, L(W.tetap) - 2, 8)} />} />
+          {hasPic('belangkas_top') && <Glasses p={ramp(frame, L(W.tetap) - 2, 8)} />}
         </div>
       )}
       <Line text="tetap jalan." at={L(W.tetap)} y={1220} size={130} italic weight={700} />

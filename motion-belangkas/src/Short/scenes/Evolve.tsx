@@ -3,6 +3,7 @@ import { ramp } from '../anim'
 import { Art, dnaParts } from '../Art'
 import { Belangkas } from '../Belangkas'
 import { Backdrop } from '../Backdrop'
+import { Pic } from '../Pic'
 import { Hand, Line, Pop } from '../collage'
 import { ScribbleCheck, ScribbleUnderline } from '../scribble'
 import { C } from '../theme'
@@ -37,7 +38,7 @@ export const Evolve = () => {
       <Line text="kenapa dia nggak" at={0} y={330} size={84} italic weight={500} color={C.ink} exitAt={sebenarnya - 6} />
       <Line text="BEREVOLUSI?" at={8} y={460} size={150} weight={900} color={C.ink} exitAt={sebenarnya - 6} />
       <Pop at={6} x={540} y={930} rotate={-4} exitAt={sebenarnya - 6}>
-        <Belangkas height={520} frame={frame} />
+        <Pic name="belangkas_top" height={540} fallback={<Belangkas height={520} frame={frame} />} />
       </Pop>
       {['?', '?', '?'].map((q, i) => (
         <Pop key={i} at={12 + i * 4} x={300 + i * 240} y={680 - (i % 2) * 60} rotate={(i - 1) * 14} shadow={false} exitAt={sebenarnya - 6}>
@@ -69,8 +70,8 @@ export const Evolve = () => {
           const [px, py, ph] = stage === 0 ? [tx, ty, 0] : layout(stage - 1, k < half ? k : k - half)
           return (
             <div key={k} style={{ position: 'absolute', left: px + (tx - px) * sp, top: py + (ty - py) * sp + 80, transform: 'translate(-50%, -50%)', filter: 'drop-shadow(0 14px 18px rgba(60,30,10,0.35))' }}>
-              <div style={{ transform: `scaleX(0.45) rotate(${Math.sin((frame + k * 7) / 14) * 4}deg)` }}>
-                <Art parts={DNA} size={ph + (th - ph) * sp} border={8} />
+              <div style={{ transform: `rotate(${Math.sin((frame + k * 7) / 14) * 4}deg)` }}>
+                <Pic name="dna" height={ph + (th - ph) * sp} fallback={<div style={{ transform: 'scaleX(0.45)' }}><Art parts={DNA} size={ph + (th - ph) * sp} border={8} /></div>} />
               </div>
             </div>
           )

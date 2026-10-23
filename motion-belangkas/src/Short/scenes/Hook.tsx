@@ -3,6 +3,7 @@ import { ramp, shake } from '../anim'
 import { Art, GLOBE, SKULL } from '../Art'
 import { Belangkas } from '../Belangkas'
 import { Backdrop } from '../Backdrop'
+import { Pic } from '../Pic'
 import { Hand, Line, Pop } from '../collage'
 import { ScribbleArrow, ScribbleCircle, ScribbleCross } from '../scribble'
 import { C, SERIF } from '../theme'
@@ -25,6 +26,13 @@ export const Hook = () => {
   return (
     <AbsoluteFill style={{ transform: `translate(${sh.x}px, ${sh.y}px)` }}>
       <Backdrop variant="maroon" />
+
+      {/* Fosil di balik angka */}
+      <Pop at={6} x={540} y={640} rotate={-7} exitAt={bumi - 2}>
+        <div style={{ opacity: 0.55 }}>
+          <Pic name="fossil" height={560} fallback={null} />
+        </div>
+      </Pop>
 
       {/* 445 juta tahun */}
       <div
@@ -50,7 +58,7 @@ export const Hook = () => {
       {/* Bumi di-reset */}
       <Pop at={bumi} x={540} y={820} exitAt={hewan + 6}>
         <div style={{ position: 'relative', transform: `rotate(${frame * 0.3}deg)`, filter: `grayscale(${dead}) brightness(${1 - dead * 0.45})` }}>
-          <Art parts={GLOBE} size={560} />
+          <Pic name="globe" height={560} fallback={<Art parts={GLOBE} size={560} />} />
           {glitch &&
             [0, 1, 2, 3].map((i) => (
               <div
@@ -64,7 +72,7 @@ export const Hook = () => {
                   filter: `hue-rotate(${i * 90}deg) saturate(3)`,
                 }}
               >
-                <Art parts={GLOBE} size={560} />
+                <Pic name="globe" height={560} fallback={<Art parts={GLOBE} size={560} />} />
               </div>
             ))}
         </div>
@@ -79,13 +87,13 @@ export const Hook = () => {
       </Pop>
       {[0, 1, 2, 3, 4].map((i) => (
         <Pop key={i} at={reset + 12 + i * 3} x={180 + i * 180} y={1200} rotate={(i - 2) * 5} exitAt={hewan}>
-          <Art parts={SKULL} size={130} />
+          <Pic name="skull" height={140} fallback={<Art parts={SKULL} size={130} />} />
         </Pop>
       ))}
 
       {/* Hewan ini selalu lolos */}
       <Pop at={hewan} x={540} y={820} from="bottom" rotate={-5}>
-        <Belangkas height={820} frame={frame} />
+        <Pic name="belangkas_top" height={860} fallback={<Belangkas height={820} frame={frame} />} />
       </Pop>
       <Pop at={lolos - 4} x={820} y={360} rotate={6} shadow={false}>
         <Hand size={86} color={C.cream}>selalu lolos!</Hand>

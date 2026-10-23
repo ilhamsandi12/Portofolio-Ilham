@@ -3,6 +3,7 @@ import { ramp } from '../anim'
 import { Art, CRAB, SCORPION, SPIDER } from '../Art'
 import { Belangkas } from '../Belangkas'
 import { Backdrop } from '../Backdrop'
+import { Pic } from '../Pic'
 import { Hand, Line, Pop, Tape } from '../collage'
 import { ScribbleCross } from '../scribble'
 import { C, SERIF } from '../theme'
@@ -22,7 +23,7 @@ export const Intro = () => {
       <Line text="BELANGKAS" at={L(W.belangkas) - 3} y={385} size={150} weight={900} color={C.ink} tracking={2} />
 
       <div style={{ position: 'absolute', left: 540 + walkIn, top: 960, transform: 'translate(-50%, -50%) rotate(-4deg)', filter: 'drop-shadow(0 26px 30px rgba(60,30,10,0.4))' }}>
-        <Belangkas height={760} frame={frame} walking={frame < 24} />
+        <Pic name="belangkas_top" height={780} fallback={<Belangkas height={760} frame={frame} walking={frame < 24} />} />
         <div style={{ position: 'absolute', left: 30, top: 30 }}><Tape w={170} rotate={-28} /></div>
         <div style={{ position: 'absolute', right: 20, top: 40 }}><Tape w={150} rotate={24} /></div>
       </div>
@@ -33,7 +34,7 @@ export const Intro = () => {
       {/* Bukan kepiting */}
       <Pop at={L(W.kepiting) - 3} x={190} y={1110} rotate={-8}>
         <div style={{ position: 'relative' }}>
-          <Art parts={CRAB} size={260} />
+          <Pic name="crab" height={260} fallback={<Art parts={CRAB} size={260} />} />
           <div style={{ position: 'absolute', left: 0, top: 0 }}>
             <ScribbleCross size={260} p={ramp(frame, L(W.kepiting) + 6, 12)} sw={14} />
           </div>
@@ -49,10 +50,10 @@ export const Intro = () => {
         <path d="M700 1000 C770 1040 820 1060 870 1080" fill="none" stroke={C.ink} strokeWidth="5" strokeDasharray="14 12" opacity={ramp(frame, L(W.kala), 16)} />
       </svg>
       <Pop at={L(W.laba) - 3} x={880} y={640} rotate={8}>
-        <Art parts={SPIDER} size={250} />
+        <Pic name="spider" height={260} fallback={<Art parts={SPIDER} size={250} />} />
       </Pop>
       <Pop at={L(W.kala) - 3} x={880} y={1110} rotate={-6}>
-        <Art parts={SCORPION} size={270} />
+        <Pic name="scorpion" height={280} fallback={<Art parts={SCORPION} size={270} />} />
       </Pop>
       <Pop at={L(W.kerabat)} x={900} y={880} rotate={-8} shadow={false}>
         <Hand size={70} color={C.ink}>kerabat aslinya</Hand>

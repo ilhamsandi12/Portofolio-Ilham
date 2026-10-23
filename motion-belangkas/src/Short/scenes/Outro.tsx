@@ -3,6 +3,7 @@ import { ramp, shake } from '../anim'
 import { Art, SKULL, WAVES } from '../Art'
 import { Belangkas } from '../Belangkas'
 import { Backdrop } from '../Backdrop'
+import { hasPic, Pic } from '../Pic'
 import { Hand, Line, Pop, Stamp } from '../collage'
 import { ScribbleCheck } from '../scribble'
 import { C, SERIF } from '../theme'
@@ -44,7 +45,7 @@ export const Outro = () => {
       {[0, 1, 2, 3, 4].map((i) => (
         <Pop key={i} at={L(W.setelah) + i * 4} x={160 + i * 190} y={560} rotate={(i - 2) * 6} exitAt={ancaman}>
           <div style={{ position: 'relative' }}>
-            <Art parts={SKULL} size={130} />
+            <Pic name="skull" height={140} fallback={<Art parts={SKULL} size={130} />} />
             <div style={{ position: 'absolute', left: 20, top: 10 }}>
               <ScribbleCheck size={100} p={ramp(frame, L(W.setelah) + i * 4 + 8, 8)} color="#7fd18b" />
             </div>
@@ -62,14 +63,25 @@ export const Outro = () => {
           filter: 'drop-shadow(0 24px 24px rgba(0,0,0,0.5))',
         }}
       >
-        <Belangkas height={480} frame={frame} walking={frame > lepas - 4} />
+        <Pic name="belangkas_top" height={500} fallback={<Belangkas height={480} frame={frame} walking={frame > lepas - 4} />} />
       </div>
 
       {/* Jaring: ancaman terbesarnya sekarang */}
       <svg width="1080" height="1920" style={{ position: 'absolute', left: 0, top: 0, transform: `translateY(${-920 + netDown * 500 - netUp * 1100}px)` }}>
-        <path d={NET} fill="none" stroke={C.creamDim} strokeWidth="6" opacity="0.85" filter="url(#chalk)" />
+        <path d={NET} fill="none" stroke={C.creamDim} strokeWidth="6" opacity={hasPic('net') ? 0 : 0.85} filter="url(#chalk)" />
       </svg>
+      {hasPic('net') && (
+        <div style={{ position: 'absolute', left: 540, top: 0, transform: `translate(-50%, ${-1500 + netDown * 1250 - netUp * 1700}px)` }}>
+          <Pic name="net" height={1500} fallback={null} />
+        </div>
+      )}
 
+      {/* Tangan manusia meraih dari atas saat "kita" */}
+      {hasPic('hand') && frame >= kita - 10 && (
+        <div style={{ position: 'absolute', left: 620, top: 0, transform: `translate(-50%, ${-900 + spring({ frame: frame - kita + 10, fps, config: { damping: 14 } }) * 700 - netUp * 1200}px) rotate(-8deg)`, filter: 'drop-shadow(0 26px 30px rgba(0,0,0,0.5))' }}>
+          <Pic name="hand" height={900} fallback={null} />
+        </div>
+      )}
       <Line text="ancaman terbesarnya:" at={ancaman + 6} y={340} size={70} italic weight={500} exitAt={indo - 4} />
       <Pop at={kita - 2} x={540} y={540} from="slam" shadow={false} exitAt={indo - 4}>
         <div style={{ fontFamily: SERIF, fontWeight: 900, fontSize: 290, color: C.red, letterSpacing: 6, textShadow: '0 10px 40px rgba(226,58,46,0.45)' }}>KITA.</div>
@@ -84,7 +96,7 @@ export const Outro = () => {
 
       <Pop at={ketemu} x={540} y={1550} from="bottom" shadow={false}>
         <div style={{ width: 1200 }}>
-          <Art parts={WAVES} size={1200} view={360} border={6} />
+          <Pic name="wave" width={1200} fallback={<Art parts={WAVES} size={1200} view={360} border={6} />} />
         </div>
       </Pop>
       <Line text="lepasin." at={lepas - 2} y={700} size={150} italic weight={800} exitAt={end} />
